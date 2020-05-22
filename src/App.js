@@ -11,6 +11,17 @@ function debounce(fn, timer) {
     }, timer);
   };
 }
+function throttle(fn, timer) {
+  let timeReference = undefined;
+  return function(...args) {
+    if (timeReference) return;
+
+    timeReference = setTimeout(() => {
+      fn.apply(null, args);
+      timeReference = undefined;
+    }, timer);
+  };
+}
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -21,9 +32,9 @@ export default class App extends React.Component {
   }
   handleSearch(e) {
     this.setState({ search: e.target.value });
-    this.showsearch(this.state.search);
+    this.showsearch(e.target.value);
   }
-  showsearch = debounce(function(val) {
+  showsearch = throttle(function(val) {
     console.log("search text is ", val);
   }, 1000);
   render() {
